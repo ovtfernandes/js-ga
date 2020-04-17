@@ -12,6 +12,9 @@ class Rocket {
             this.dna = dna;
         }
         this.fitness = 0;
+
+        // time left when completing the course
+        this.timeLeft = this.dna.genes.length;
     }
 
     applyForce(force) {
@@ -24,7 +27,7 @@ class Rocket {
         this.fitness = map(d, 0, width, width, 0);
 
         if (this.completed) {
-            this.fitness *= 10;
+            this.fitness *= this.timeLeft;
         }
         if (this.crashed) {
             this.fitness /= 10;
@@ -33,8 +36,9 @@ class Rocket {
 
     update(geneIndex, target, obstacles) {
         const d = this.position.dist(target);
-        if (d < 10) {
+        if (d < 10 && !this.completed) {
             this.completed = true;
+            this.timeLeft = this.dna.genes.length - geneIndex;
             this.position = target.copy();
         }
 

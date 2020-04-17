@@ -4,6 +4,7 @@ class Population {
         this.count = 0;
         this.lifespan = lifespan;
         this.matingPool = [];
+        this.generation = 1;
 
         this.initializeRockets();
     }
@@ -56,6 +57,7 @@ class Population {
             const maxfit = this.evaluate(target);
             this.selection();
             this.count = 0;
+            this.generation++;
 
             return maxfit;
         }
