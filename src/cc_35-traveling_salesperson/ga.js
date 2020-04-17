@@ -45,15 +45,33 @@ function nextGeneration(population, fitnesses, order) {
         return newPopulation;
     } else {
         return population.map(() => {
-            const order = pickOne(population, fitnesses);
-            mutate(order);
-            return order;
+            const parentA = pickOne(population, fitnesses);
+            const parentB = pickOne(population, fitnesses);
+            const child = crossOver(parentA, parentB);
+            mutate(child);
+            return child;
         });
     }
 }
 
+function crossOver(parentA, parentB) {
+    const start = floor(random(parentA.length-1));
+    const end = floor(random(start+1, parentA.length));
+    const child = parentA.slice(start, end);
+    parentB.forEach(city => {
+        if (!child.includes(city)) {
+            child.push(city);
+        }
+    });
+    return child;
+}
+
 function mutate(order) {
-    const i = floor(random(order.length));
-    const j = floor(random(order.length));
-    [order[i], order[j]] = [order[j], order[i]];
+    for (let n=0; n<order.length; n++) {
+        if (random(1) < mutationRate) {
+            const i = floor(random(order.length));
+            const j = (i+1) % order.length;
+            [order[i], order[j]] = [order[j], order[i]];
+        }
+    }
 }
